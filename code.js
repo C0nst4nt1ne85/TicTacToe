@@ -58,8 +58,49 @@ function game () {
         playerTurn();
     } else {
         changeText("PC turn!", "#8c271e");
-        RandomAi();
+        randomAi();
     }
+}
+
+function playerTurn() {
+    mousePos = [];
+    desiredPos = 0;
+    var handle = setInterval(function () {
+        $("#gameCanvas").mousedown(function (evt) {
+            mousePos = getMousePos(evt);
+            if (mousePos[1] < canvasSize / 3) {
+                if (mousePos[0] < canvasSize / 3) {
+                    desiredPos = 1;
+                } else if (mousePos[0] < (2 * canvasSize) / 3) {
+                    desiredPos = 2;
+                } else {
+                    desiredPos = 3;
+                }
+            } else if (mousePos[1] < (2 * canvasSize) / 3) {
+                if (mousePos[0] < canvasSize / 3) {
+                    desiredPos = 4;
+                } else if (mousePos[0] < (2 * canvasSize) / 3) {
+                    desiredPos = 5;
+                } else {
+                    desiredPos = 6;
+                }
+            } else {
+                if (mousePos[0] < canvasSize / 3) {
+                    desiredPos = 7;
+                } else if (mousePos[0] < (2 * canvasSize) / 3) {
+                    desiredPos = 8;
+                } else {
+                    desiredPos = 9;
+                }
+            }
+            //find the indented position
+        });
+        if (availablePos.indexOf(desiredPos) >= 0) {
+            $("#gameCanvas").off("mousedown");
+            clearInterval(handle);
+        }
+        logistics();
+    }, 1);
 }
 
 function checkEndGame() {
@@ -144,7 +185,7 @@ function checkEndGame() {
     } else if (availablePos.length == 0) {
         endGame("draw");
     } else {
-        //player = !player;
+        player = !player;
         game();
     }
 }
@@ -165,6 +206,11 @@ function endGame(side) {
     initiliaze();
 }
 
+//AI
+function randomAi(){
+    console.log("PC turn");
+}
+
 //"backend" functions
 
 function getMousePos(evt) {
@@ -173,52 +219,22 @@ function getMousePos(evt) {
     return [mouseX, mouseY];
 }
 
-function playerTurn() {
-    mousePos = [];
-    desiredPos = 0;
-    var handle = setInterval(function(){
-        $("#gameCanvas").mousedown(function (evt) {
-            mousePos = getMousePos(evt);
-            if (mousePos[1] < canvasSize / 3) {
-                if (mousePos[0] < canvasSize / 3) {
-                    desiredPos = 1;
-                } else if (mousePos[0] < (2 * canvasSize) / 3) {
-                    desiredPos = 2;
-                } else {
-                    desiredPos = 3;
-                }
-            } else if (mousePos[1] < (2 * canvasSize) / 3) {
-                if (mousePos[0] < canvasSize / 3) {
-                    desiredPos = 4;
-                } else if (mousePos[0] < (2 * canvasSize) / 3) {
-                    desiredPos = 5;
-                } else {
-                    desiredPos = 6;
-                }
-            } else {
-                if (mousePos[0] < canvasSize / 3) {
-                    desiredPos = 7;
-                } else if (mousePos[0] < (2 * canvasSize) / 3) {
-                    desiredPos = 8;
-                } else {
-                    desiredPos = 9;
-                }
-            }
-            //find the indented position
-            if (availablePos.indexOf(desiredPos) >= 0) {
-                //checks if the position is free or not
-                drawSign(playerSign, desiredPos, "#efefef");
-                //paint the sign
-            }
-        });
-        if (desiredPos != 0) {
-            clearInterval(handle);
+function logistics() {
+    //checks if the position is free or not and if the interval has stopped
+    if (desiredPos != 0 && availablePos.indexOf(desiredPos) >= 0) {
+        if (player){
+            drawSign(playerSign, desiredPos, "#efefef");
+            playerPos[desiredPos] = true;
+        } else {
+            drawSign(pcSign, desiredPos, "#efefef");
+            pcPos[desiredPos] = true;
         }
-    }, 1);
+        availablePos = availablePos.filter(function (p) {
+            return p != desiredPos;
+        });
+        checkEndGame();
+    }
 }
-
-//AI
-
 
 //buttons
 function buttons(val) {
