@@ -25,12 +25,16 @@ button {
     color:#efefef;
     font-size: 1.5em;
     font-family: 'Permanent Marker', cursive;
-    margin: 0 4% 0 4%;
-    padding: 2px 12px;
+    margin: 0;
+    padding: 2px 5px;
 }
 
 .choise {
     visibility: visible;
+}
+
+.mode {
+    visibility: hidden;
 }
 
 button:hover {

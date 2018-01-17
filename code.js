@@ -1,10 +1,12 @@
 var canvas;
 var context;
 var player;
+var difficulty;
 var mousePos;
 var desiredPos;
 var playerSign;
 var pcSign;
+var pcTurn = 0;
 var playerScore = 0;
 var pcScore = 0;
 var availablePos = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -40,24 +42,33 @@ function initiliaze() {
     changeScore();
     drawBackground();
     drawField();
-    if (player !== undefined) {
-        game();
-    } else if (playerSign == "X") {
+    pcTurn = 0;
+    if (playerSign == "X") {
         player = true;
-    } else {
+        game();
+    } else if (playerSign == "O") {
         player = false;
+        game();
     }
 }
 
 function reset () {
     playerSign = pcSign ="";
     playerScore = pcScore = 0;
+    $("#easy").html("X");
+    $("#hard").html("O");
     changeText("You Choose X or 0?", "#b3c0a4");
     $(".choise").css("visibility", "visible");
     $(".score").css("visibility", "hidden");
     $("#reset").css("visibility", "hidden");
     player = undefined;
     initiliaze();
+}
+
+function diffMode() {
+    changeText("How difficult?", "#b3c0a4")
+    $(".choise").css("visibility", "hidden");
+    $(".mode").css("visibility", "visible");
 }
 
 function game () {
@@ -67,9 +78,13 @@ function game () {
         playerTurn();
     } else {
         changeText("PC turn!", "#8c271e");
-        var ai = window.setInterval(function(){
-            randomAi();
-            clearInterval(ai);
+        var aiturn = window.setInterval(function(){
+            if (difficulty == "easy") {
+                easyAi();
+            } else {
+                hardAi();
+            }
+            clearInterval(aiturn);
         }, 800);
     }
 }
@@ -112,7 +127,7 @@ function playerTurn() {
             clearInterval(handle);
         }
         logistics();
-    }, 1);
+    }, 200);
 }
 
 function checkEndGame() {
@@ -231,116 +246,281 @@ function endGame(side) {
 }
 
 //AI
-function randomAi(){
-    if (pcPos[1] && pcPos[2] && availablePos.lastIndexOf(3) >= 0) {
+function easyAi(){
+    if (pcPos[1] && pcPos[2] && availablePos.indexOf(3) >= 0) {
         desiredPos = 3;
-    } else if (pcPos[2] && pcPos[3] && availablePos.lastIndexOf(1) >= 0) {
+    } else if (pcPos[2] && pcPos[3] && availablePos.indexOf(1) >= 0) {
         desiredPos = 1;
-    } else if (pcPos[1] && pcPos[3] && availablePos.lastIndexOf(2) >= 0) {
+    } else if (pcPos[1] && pcPos[3] && availablePos.indexOf(2) >= 0) {
         desiredPos = 2;
-    } else if (pcPos[4] && pcPos[5] && availablePos.lastIndexOf(6) >= 0) {
+    } else if (pcPos[4] && pcPos[5] && availablePos.indexOf(6) >= 0) {
         desiredPos = 6;
-    } else if (pcPos[5] && pcPos[6] && availablePos.lastIndexOf(4) >= 0) {
+    } else if (pcPos[5] && pcPos[6] && availablePos.indexOf(4) >= 0) {
         desiredPos = 4;
-    } else if (pcPos[4] && pcPos[6] && availablePos.lastIndexOf(5) >= 0) {
+    } else if (pcPos[4] && pcPos[6] && availablePos.indexOf(5) >= 0) {
         desiredPos = 5;
-    } else if (pcPos[7] && pcPos[8] && availablePos.lastIndexOf(9) >= 0) {
+    } else if (pcPos[7] && pcPos[8] && availablePos.indexOf(9) >= 0) {
         desiredPos = 9;
-    } else if (pcPos[8] && pcPos[9] && availablePos.lastIndexOf(7) >= 0) {
+    } else if (pcPos[8] && pcPos[9] && availablePos.indexOf(7) >= 0) {
         desiredPos = 7;
-    } else if (pcPos[7] && pcPos[9] && availablePos.lastIndexOf(8) >= 0) {
+    } else if (pcPos[7] && pcPos[9] && availablePos.indexOf(8) >= 0) {
         desiredPos = 8;
-    } else if (pcPos[1] && pcPos[4] && availablePos.lastIndexOf(7) >= 0) {
+    } else if (pcPos[1] && pcPos[4] && availablePos.indexOf(7) >= 0) {
         desiredPos = 7;
-    } else if (pcPos[4] && pcPos[7] && availablePos.lastIndexOf(1) >= 0) {
+    } else if (pcPos[4] && pcPos[7] && availablePos.indexOf(1) >= 0) {
         desiredPos = 1;
-    } else if (pcPos[1] && pcPos[7] && availablePos.lastIndexOf(4) >= 0) {
+    } else if (pcPos[1] && pcPos[7] && availablePos.indexOf(4) >= 0) {
         desiredPos = 4;
-    } else if (pcPos[2] && pcPos[5] && availablePos.lastIndexOf(8) >= 0) {
+    } else if (pcPos[2] && pcPos[5] && availablePos.indexOf(8) >= 0) {
         desiredPos = 8;
-    } else if (pcPos[5] && pcPos[8] && availablePos.lastIndexOf(2) >= 0) {
+    } else if (pcPos[5] && pcPos[8] && availablePos.indexOf(2) >= 0) {
         desiredPos = 2;
-    } else if (pcPos[2] && pcPos[8] && availablePos.lastIndexOf(5) >= 0) {
+    } else if (pcPos[2] && pcPos[8] && availablePos.indexOf(5) >= 0) {
         desiredPos = 5;
-    } else if (pcPos[3] && pcPos[6] && availablePos.lastIndexOf(9) >= 0) {
+    } else if (pcPos[3] && pcPos[6] && availablePos.indexOf(9) >= 0) {
         desiredPos = 9;
-    } else if (pcPos[6] && pcPos[9] && availablePos.lastIndexOf(3) >= 0) {
+    } else if (pcPos[6] && pcPos[9] && availablePos.indexOf(3) >= 0) {
         desiredPos = 3;
-    } else if (pcPos[3] && pcPos[9] && availablePos.lastIndexOf(6) >= 0) {
+    } else if (pcPos[3] && pcPos[9] && availablePos.indexOf(6) >= 0) {
         desiredPos = 6;
-    } else if (pcPos[3] && pcPos[9] && availablePos.lastIndexOf(6) >= 0) {
+    } else if (pcPos[3] && pcPos[9] && availablePos.indexOf(6) >= 0) {
         desiredPos = 6;
-    } else if (pcPos[1] && pcPos[5] && availablePos.lastIndexOf(9) >= 0) {
+    } else if (pcPos[1] && pcPos[5] && availablePos.indexOf(9) >= 0) {
         desiredPos = 9;
-    } else if (pcPos[5] && pcPos[9] && availablePos.lastIndexOf(1) >= 0) {
+    } else if (pcPos[5] && pcPos[9] && availablePos.indexOf(1) >= 0) {
         desiredPos = 1;
-    } else if (pcPos[1] && pcPos[9] && availablePos.lastIndexOf(5) >= 0) {
+    } else if (pcPos[1] && pcPos[9] && availablePos.indexOf(5) >= 0) {
         desiredPos = 5;
-    } else if (pcPos[3] && pcPos[5] && availablePos.lastIndexOf(7) >= 0) {
+    } else if (pcPos[3] && pcPos[5] && availablePos.indexOf(7) >= 0) {
         desiredPos = 7;
-    } else if (pcPos[3] && pcPos[7] && availablePos.lastIndexOf(5) >= 0) {
+    } else if (pcPos[3] && pcPos[7] && availablePos.indexOf(5) >= 0) {
         desiredPos = 5;
-    } else if (pcPos[5] && pcPos[7] && availablePos.lastIndexOf(3) >= 0) {
+    } else if (pcPos[5] && pcPos[7] && availablePos.indexOf(3) >= 0) {
         desiredPos = 3;
-    }
-    
-    
-    
-    
-    else if (playerPos[1] && playerPos[2] && availablePos.lastIndexOf(3) >= 0) {
+    } else if (playerPos[1] && playerPos[2] && availablePos.indexOf(3) >= 0) {
         desiredPos = 3;
-    } else if (playerPos[2] && playerPos[3] && availablePos.lastIndexOf(1) >= 0) {
+    } else if (playerPos[2] && playerPos[3] && availablePos.indexOf(1) >= 0) {
         desiredPos = 1;
-    } else if (playerPos[1] && playerPos[3] && availablePos.lastIndexOf(2) >= 0) {
+    } else if (playerPos[1] && playerPos[3] && availablePos.indexOf(2) >= 0) {
         desiredPos = 2;
-    } else if (playerPos[4] && playerPos[5] && availablePos.lastIndexOf(6) >= 0) {
+    } else if (playerPos[4] && playerPos[5] && availablePos.indexOf(6) >= 0) {
         desiredPos = 6;
-    } else if (playerPos[5] && playerPos[6] && availablePos.lastIndexOf(4) >= 0) {
+    } else if (playerPos[5] && playerPos[6] && availablePos.indexOf(4) >= 0) {
         desiredPos = 4;
-    } else if (playerPos[4] && playerPos[6] && availablePos.lastIndexOf(5) >= 0) {
+    } else if (playerPos[4] && playerPos[6] && availablePos.indexOf(5) >= 0) {
         desiredPos = 5;
-    } else if (playerPos[7] && playerPos[8] && availablePos.lastIndexOf(9) >= 0) {
+    } else if (playerPos[7] && playerPos[8] && availablePos.indexOf(9) >= 0) {
         desiredPos = 9;
-    } else if (playerPos[8] && playerPos[9] && availablePos.lastIndexOf(7) >= 0) {
+    } else if (playerPos[8] && playerPos[9] && availablePos.indexOf(7) >= 0) {
         desiredPos = 7;
-    } else if (playerPos[7] && playerPos[9] && availablePos.lastIndexOf(8) >= 0) {
+    } else if (playerPos[7] && playerPos[9] && availablePos.indexOf(8) >= 0) {
         desiredPos = 8;
-    } else if (playerPos[1] && playerPos[4] && availablePos.lastIndexOf(7) >= 0) {
+    } else if (playerPos[1] && playerPos[4] && availablePos.indexOf(7) >= 0) {
         desiredPos = 7;
-    } else if (playerPos[4] && playerPos[7] && availablePos.lastIndexOf(1) >= 0) {
+    } else if (playerPos[4] && playerPos[7] && availablePos.indexOf(1) >= 0) {
         desiredPos = 1;
-    } else if (playerPos[1] && playerPos[7] && availablePos.lastIndexOf(4) >= 0) {
+    } else if (playerPos[1] && playerPos[7] && availablePos.indexOf(4) >= 0) {
         desiredPos = 4;
-    } else if (playerPos[2] && playerPos[5] && availablePos.lastIndexOf(8) >= 0) {
+    } else if (playerPos[2] && playerPos[5] && availablePos.indexOf(8) >= 0) {
         desiredPos = 8;
-    } else if (playerPos[5] && playerPos[8] && availablePos.lastIndexOf(2) >= 0) {
+    } else if (playerPos[5] && playerPos[8] && availablePos.indexOf(2) >= 0) {
         desiredPos = 2;
-    } else if (playerPos[2] && playerPos[8] && availablePos.lastIndexOf(5) >= 0) {
+    } else if (playerPos[2] && playerPos[8] && availablePos.indexOf(5) >= 0) {
         desiredPos = 5;
-    } else if (playerPos[3] && playerPos[6] && availablePos.lastIndexOf(9) >= 0) {
+    } else if (playerPos[3] && playerPos[6] && availablePos.indexOf(9) >= 0) {
         desiredPos = 9;
-    } else if (playerPos[6] && playerPos[9] && availablePos.lastIndexOf(3) >= 0) {
+    } else if (playerPos[6] && playerPos[9] && availablePos.indexOf(3) >= 0) {
         desiredPos = 3;
-    } else if (playerPos[3] && playerPos[9] && availablePos.lastIndexOf(6) >= 0) {
+    } else if (playerPos[3] && playerPos[9] && availablePos.indexOf(6) >= 0) {
         desiredPos = 6;
-    } else if (playerPos[1] && playerPos[5] && availablePos.lastIndexOf(9) >= 0) {
+    } else if (playerPos[1] && playerPos[5] && availablePos.indexOf(9) >= 0) {
         desiredPos = 9;
-    } else if (playerPos[5] && playerPos[9] && availablePos.lastIndexOf(1) >= 0) {
+    } else if (playerPos[5] && playerPos[9] && availablePos.indexOf(1) >= 0) {
         desiredPos = 1;
-    } else if (playerPos[1] && playerPos[9] && availablePos.lastIndexOf(5) >= 0) {
+    } else if (playerPos[1] && playerPos[9] && availablePos.indexOf(5) >= 0) {
         desiredPos = 5;
-    } else if (playerPos[3] && playerPos[5] && availablePos.lastIndexOf(7) >= 0) {
+    } else if (playerPos[3] && playerPos[5] && availablePos.indexOf(7) >= 0) {
         desiredPos = 7;
-    } else if (playerPos[3] && playerPos[7] && availablePos.lastIndexOf(5) >= 0) {
+    } else if (playerPos[3] && playerPos[7] && availablePos.indexOf(5) >= 0) {
         desiredPos = 5;
-    } else if (playerPos[5] && playerPos[7] && availablePos.lastIndexOf(3) >= 0) {
+    } else if (playerPos[5] && playerPos[7] && availablePos.indexOf(3) >= 0) {
         desiredPos = 3;
-    } else if (availablePos.lastIndexOf(5) >= 0) {
+    } else if (availablePos.indexOf(5) >= 0) {
         desiredPos = 5;
     } else {
-        desiredPos = availablePos[0];
-    } 
+        var max = availablePos.length;
+        var sth = Math.trunc(Math.random() * (max + 1)) - 1;
+        if (sth < 0 || sth >= max) {
+            sth = 0;
+        }
+        desiredPos = availablePos[sth];
+    }
+    console.log(desiredPos);
+    logistics(); 
+}
 
+function hardAi () {
+    console.log("I am hard");
+    var path;
+    pcTurn++;
+    if (pcPos[1] && pcPos[2] && availablePos.indexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (pcPos[2] && pcPos[3] && availablePos.indexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (pcPos[1] && pcPos[3] && availablePos.indexOf(2) >= 0) {
+        desiredPos = 2;
+    } else if (pcPos[4] && pcPos[5] && availablePos.indexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (pcPos[5] && pcPos[6] && availablePos.indexOf(4) >= 0) {
+        desiredPos = 4;
+    } else if (pcPos[4] && pcPos[6] && availablePos.indexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (pcPos[7] && pcPos[8] && availablePos.indexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (pcPos[8] && pcPos[9] && availablePos.indexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (pcPos[7] && pcPos[9] && availablePos.indexOf(8) >= 0) {
+        desiredPos = 8;
+    } else if (pcPos[1] && pcPos[4] && availablePos.indexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (pcPos[4] && pcPos[7] && availablePos.indexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (pcPos[1] && pcPos[7] && availablePos.indexOf(4) >= 0) {
+        desiredPos = 4;
+    } else if (pcPos[2] && pcPos[5] && availablePos.indexOf(8) >= 0) {
+        desiredPos = 8;
+    } else if (pcPos[5] && pcPos[8] && availablePos.indexOf(2) >= 0) {
+        desiredPos = 2;
+    } else if (pcPos[2] && pcPos[8] && availablePos.indexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (pcPos[3] && pcPos[6] && availablePos.indexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (pcPos[6] && pcPos[9] && availablePos.indexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (pcPos[3] && pcPos[9] && availablePos.indexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (pcPos[3] && pcPos[9] && availablePos.indexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (pcPos[1] && pcPos[5] && availablePos.indexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (pcPos[5] && pcPos[9] && availablePos.indexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (pcPos[1] && pcPos[9] && availablePos.indexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (pcPos[3] && pcPos[5] && availablePos.indexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (pcPos[3] && pcPos[7] && availablePos.indexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (pcPos[5] && pcPos[7] && availablePos.indexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (playerPos[1] && playerPos[2] && availablePos.indexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (playerPos[2] && playerPos[3] && availablePos.indexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (playerPos[1] && playerPos[3] && availablePos.indexOf(2) >= 0) {
+        desiredPos = 2;
+    } else if (playerPos[4] && playerPos[5] && availablePos.indexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (playerPos[5] && playerPos[6] && availablePos.indexOf(4) >= 0) {
+        desiredPos = 4;
+    } else if (playerPos[4] && playerPos[6] && availablePos.indexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (playerPos[7] && playerPos[8] && availablePos.indexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (playerPos[8] && playerPos[9] && availablePos.indexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (playerPos[7] && playerPos[9] && availablePos.indexOf(8) >= 0) {
+        desiredPos = 8;
+    } else if (playerPos[1] && playerPos[4] && availablePos.indexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (playerPos[4] && playerPos[7] && availablePos.indexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (playerPos[1] && playerPos[7] && availablePos.indexOf(4) >= 0) {
+        desiredPos = 4;
+    } else if (playerPos[2] && playerPos[5] && availablePos.indexOf(8) >= 0) {
+        desiredPos = 8;
+    } else if (playerPos[5] && playerPos[8] && availablePos.indexOf(2) >= 0) {
+        desiredPos = 2;
+    } else if (playerPos[2] && playerPos[8] && availablePos.indexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (playerPos[3] && playerPos[6] && availablePos.indexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (playerPos[6] && playerPos[9] && availablePos.indexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (playerPos[3] && playerPos[9] && availablePos.indexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (playerPos[1] && playerPos[5] && availablePos.indexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (playerPos[5] && playerPos[9] && availablePos.indexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (playerPos[1] && playerPos[9] && availablePos.indexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (playerPos[3] && playerPos[5] && availablePos.indexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (playerPos[3] && playerPos[7] && availablePos.indexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (playerPos[5] && playerPos[7] && availablePos.indexOf(3) >= 0) {
+        desiredPos = 3;
+    } else {
+        if (pcSign == "X") {
+            console.log("I am X, turn" + pcTurn);
+            if (pcTurn == 1) {
+                desiredPos = 7;
+            } else if (pcTurn == 2) {
+                if (availablePos.indexOf(5) >= 0) {
+                    console.log("noCenter");
+                    if (availablePos.indexOf(1) >= 0){
+                        desiredPos = 1;
+                    } else {
+                        desiredPos =3;
+                    }
+                } else {
+                    console.log("Center");
+                    path = Math.floor(Math.random() * 2) + 1;
+                    if (path == 1) {
+                        desiredPos = 3;
+                    } else {
+                        path = Math.floor(Math.random() * 2) + 1;
+                        if (path == 1) {
+                            desiredPos = 2;
+                        } else {
+                            desiredPos = 6;
+                        }
+                    }
+                }
+            } else if (pcTurn === 3) {
+                if (availablePos.indexOf(9) >= 0) {
+                    desiredPos = 9;
+                } else {
+                    desiredPos = 3;
+                }
+            } availablePos.indexOf(5) >= 0
+        } else if (pcSign == "O") {
+            if (pcTurn == 1) {
+                if (availablePos.indexOf(5) >= 0) {
+                    desiredPos = 5;
+                } else {
+                    desiredPos = 3;
+                } 
+            } else if (playerPos[5] == true && playerPos[7] == true) {
+                desiredPos = 1;     
+            } else if (pcTurn == 2 && ((playerPos[1] && playerPos[7]) || (playerPos[2] && playerPos[8]) || (playerPos[3] && playerPos[9]) || (playerPos[1] && playerPos[3]) || (playerPos[4] && playerPos[6]) || (playerPos[7] && playerPos[9]) ))  {
+                desiredPos = 9;
+            } else if (pcTurn > 1) {
+                if (availablePos.indexOf(2) >= 0) {
+                    desiredPos = 2;
+                } else if (availablePos.indexOf(4) >= 0) {
+                    desiredPos = 4;
+                } if (availablePos.indexOf(6) >= 0) {
+                    desiredPos = 6;
+                } else if (availablePos.indexOf(8) >= 0) {
+                    desiredPos = 8;
+                }
+            } else {
+                desiredPos = availablePos[0]; 
+            } 
+        }
+    } 
     logistics();
 }
 
@@ -374,16 +554,24 @@ function buttons(val) {
     switch (val) {
         case "X":
             playerSign = "X"
-            pcSign = "0"
-            drawInGame();
+            pcSign = "O"
             player = true;
-            game();
+            diffMode();
             break;
         case "O":
             playerSign = "O"
             pcSign = "X"
-            drawInGame();
             player = false;
+            diffMode();
+            break;
+        case "easy": 
+            difficulty = "easy";
+            drawInGame();
+            game();
+            break;
+        case "hard":
+            difficulty = "hard";
+            drawInGame();
             game();
             break;
         case "reset":
@@ -430,7 +618,7 @@ function drawSign (sign, pos, color) {
 }
 
 function drawInGame () {
-    $(".choise").css("visibility", "hidden");
+    $(".mode").css("visibility", "hidden");
     $(".score").css("visibility", "visible");
     $("#reset").css("visibility", "visible");
     //make the score and reset button appear and the sign choise buttons dissapear
