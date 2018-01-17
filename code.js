@@ -461,8 +461,7 @@ function hardAi () {
         desiredPos = 5;
     } else if (playerPos[5] && playerPos[7] && availablePos.indexOf(3) >= 0) {
         desiredPos = 3;
-    } else {
-        if (pcSign == "X") {
+    } else if (pcSign == "X") {
             console.log("I am X, turn" + pcTurn);
             if (pcTurn == 1) {
                 desiredPos = 7;
@@ -516,10 +515,9 @@ function hardAi () {
                 } else if (availablePos.indexOf(8) >= 0) {
                     desiredPos = 8;
                 }
+            }  
             } else {
-                desiredPos = availablePos[0]; 
-            } 
-        }
+        desiredPos = availablePos[0];
     } 
     logistics();
 }
