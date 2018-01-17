@@ -40,6 +40,13 @@ function initiliaze() {
     changeScore();
     drawBackground();
     drawField();
+    if (player !== undefined) {
+        game();
+    } else if (playerSign == "X") {
+        player = true;
+    } else {
+        player = false;
+    }
 }
 
 function reset () {
@@ -49,16 +56,21 @@ function reset () {
     $(".choise").css("visibility", "visible");
     $(".score").css("visibility", "hidden");
     $("#reset").css("visibility", "hidden");
+    player = undefined;
     initiliaze();
 }
 
 function game () {
+    desiredPos = 0;
     if (player) {
         changeText("Your turn!", "#22aaa1");
         playerTurn();
     } else {
         changeText("PC turn!", "#8c271e");
-        randomAi();
+        var ai = window.setInterval(function(){
+            randomAi();
+            clearInterval(ai);
+        }, 800);
     }
 }
 
@@ -104,6 +116,7 @@ function playerTurn() {
 }
 
 function checkEndGame() {
+    var endScreen;
     if (playerPos[1] && playerPos[2] && playerPos[3]) {
         drawSign(playerSign, 1, "#22aaa1");
         drawSign(playerSign, 2, "#22aaa1");
@@ -147,11 +160,13 @@ function checkEndGame() {
     } else if (pcPos[1] && pcPos[2] && pcPos[3]) {
         drawSign(pcSign, 1, "#8c271e");
         drawSign(pcSign, 2, "#8c271e");
-        drawSign(pcSign, 3, "#8c271e"); endGame("pc");
+        drawSign(pcSign, 3, "#8c271e"); 
+        endGame("pc");
     } else if (pcPos[4] && pcPos[5] && pcPos[6]) {
         drawSign(pcSign, 4, "#8c271e");
         drawSign(pcSign, 5, "#8c271e");
-        drawSign(pcSign, 6, "#8c271e");
+        drawSign(pcSign, 6, "#8c271e"); 
+        endGame("pc");
     } else if (pcPos[7] && pcPos[8] && pcPos[9]) {
         drawSign(pcSign, 7, "#8c271e");
         drawSign(pcSign, 8, "#8c271e");
@@ -191,24 +206,142 @@ function checkEndGame() {
 }
 
 function endGame(side) {
-    switch (side) {
-        case "draw":
-            endGameDraw("It's a Draw.", 80, "#efefef");
-            break;
-        case "player":
-            playerScore++;
-            endGameDraw("You won!", 80, "#22aaa1");
-            break;
-        case "pc":
-            pcScore++;
-            endGameDraw("You lose!", 80, "#8c271e");
-    }
-    initiliaze();
+    var end = window.setInterval(function(){
+        switch (side) {
+            case "draw":
+                drawEndGame("It's a Draw.", 80, "#efefef");
+                break;
+            case "player":
+                playerScore++;
+                drawEndGame("You won!", 80, "#22aaa1");
+                break;
+            case "pc":
+                pcScore++;
+                drawEndGame("You lose!", 80, "#8c271e");
+        }
+        clearInterval(end);
+    },500);
+    
+
+    var restart = window.setInterval(function () {
+        initiliaze();
+        clearInterval(restart);
+    }, 2000);
+
 }
 
 //AI
 function randomAi(){
-    console.log("PC turn");
+    if (pcPos[1] && pcPos[2] && availablePos.lastIndexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (pcPos[2] && pcPos[3] && availablePos.lastIndexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (pcPos[1] && pcPos[3] && availablePos.lastIndexOf(2) >= 0) {
+        desiredPos = 2;
+    } else if (pcPos[4] && pcPos[5] && availablePos.lastIndexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (pcPos[5] && pcPos[6] && availablePos.lastIndexOf(4) >= 0) {
+        desiredPos = 4;
+    } else if (pcPos[4] && pcPos[6] && availablePos.lastIndexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (pcPos[7] && pcPos[8] && availablePos.lastIndexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (pcPos[8] && pcPos[9] && availablePos.lastIndexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (pcPos[7] && pcPos[9] && availablePos.lastIndexOf(8) >= 0) {
+        desiredPos = 8;
+    } else if (pcPos[1] && pcPos[4] && availablePos.lastIndexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (pcPos[4] && pcPos[7] && availablePos.lastIndexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (pcPos[1] && pcPos[7] && availablePos.lastIndexOf(4) >= 0) {
+        desiredPos = 4;
+    } else if (pcPos[2] && pcPos[5] && availablePos.lastIndexOf(8) >= 0) {
+        desiredPos = 8;
+    } else if (pcPos[5] && pcPos[8] && availablePos.lastIndexOf(2) >= 0) {
+        desiredPos = 2;
+    } else if (pcPos[2] && pcPos[8] && availablePos.lastIndexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (pcPos[3] && pcPos[6] && availablePos.lastIndexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (pcPos[6] && pcPos[9] && availablePos.lastIndexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (pcPos[3] && pcPos[9] && availablePos.lastIndexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (pcPos[3] && pcPos[9] && availablePos.lastIndexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (pcPos[1] && pcPos[5] && availablePos.lastIndexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (pcPos[5] && pcPos[9] && availablePos.lastIndexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (pcPos[1] && pcPos[9] && availablePos.lastIndexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (pcPos[3] && pcPos[5] && availablePos.lastIndexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (pcPos[3] && pcPos[7] && availablePos.lastIndexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (pcPos[5] && pcPos[7] && availablePos.lastIndexOf(3) >= 0) {
+        desiredPos = 3;
+    }
+    
+    
+    
+    
+    else if (playerPos[1] && playerPos[2] && availablePos.lastIndexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (playerPos[2] && playerPos[3] && availablePos.lastIndexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (playerPos[1] && playerPos[3] && availablePos.lastIndexOf(2) >= 0) {
+        desiredPos = 2;
+    } else if (playerPos[4] && playerPos[5] && availablePos.lastIndexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (playerPos[5] && playerPos[6] && availablePos.lastIndexOf(4) >= 0) {
+        desiredPos = 4;
+    } else if (playerPos[4] && playerPos[6] && availablePos.lastIndexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (playerPos[7] && playerPos[8] && availablePos.lastIndexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (playerPos[8] && playerPos[9] && availablePos.lastIndexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (playerPos[7] && playerPos[9] && availablePos.lastIndexOf(8) >= 0) {
+        desiredPos = 8;
+    } else if (playerPos[1] && playerPos[4] && availablePos.lastIndexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (playerPos[4] && playerPos[7] && availablePos.lastIndexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (playerPos[1] && playerPos[7] && availablePos.lastIndexOf(4) >= 0) {
+        desiredPos = 4;
+    } else if (playerPos[2] && playerPos[5] && availablePos.lastIndexOf(8) >= 0) {
+        desiredPos = 8;
+    } else if (playerPos[5] && playerPos[8] && availablePos.lastIndexOf(2) >= 0) {
+        desiredPos = 2;
+    } else if (playerPos[2] && playerPos[8] && availablePos.lastIndexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (playerPos[3] && playerPos[6] && availablePos.lastIndexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (playerPos[6] && playerPos[9] && availablePos.lastIndexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (playerPos[3] && playerPos[9] && availablePos.lastIndexOf(6) >= 0) {
+        desiredPos = 6;
+    } else if (playerPos[1] && playerPos[5] && availablePos.lastIndexOf(9) >= 0) {
+        desiredPos = 9;
+    } else if (playerPos[5] && playerPos[9] && availablePos.lastIndexOf(1) >= 0) {
+        desiredPos = 1;
+    } else if (playerPos[1] && playerPos[9] && availablePos.lastIndexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (playerPos[3] && playerPos[5] && availablePos.lastIndexOf(7) >= 0) {
+        desiredPos = 7;
+    } else if (playerPos[3] && playerPos[7] && availablePos.lastIndexOf(5) >= 0) {
+        desiredPos = 5;
+    } else if (playerPos[5] && playerPos[7] && availablePos.lastIndexOf(3) >= 0) {
+        desiredPos = 3;
+    } else if (availablePos.lastIndexOf(5) >= 0) {
+        desiredPos = 5;
+    } else {
+        desiredPos = availablePos[0];
+    } 
+
+    logistics();
 }
 
 //"backend" functions
